@@ -7,7 +7,7 @@ from .companies_redis import RedisClient
 
 
 class CoreConfig(AppConfig):
-    name = 'core'
+    name = "core"
 
     def ready(self):
         RedisClient().set_init_data()

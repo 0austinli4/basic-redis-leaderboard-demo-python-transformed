@@ -2,11 +2,11 @@ import os
 import json
 import enum
 import logging
-
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
 
 logger = logging.getLogger(__name__)
+from mdlin import SyncAppRequest
 
 
 class RankSortKeys(enum.Enum):
@@ -17,7 +17,24 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
-        return True
+        try:
+            if settings.REDIS_URL:
+                self.redis_client = Redis.from_url(
+                    url=settings.REDIS_URL, decode_responses=True
+                )
+            else:
+                self.redis_client = Redis(
+                    host=settings.REDIS_HOST,
+                    port=settings.REDIS_PORT,
+                    password=settings.REDIS_PASSWORD,
+                    db=settings.REDIS_DB,
+                    decode_responses=True,
+                )
+        except RedisError:
+            logger.error(
+                f"Redis failed connection to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
+            )
+            return
 
     def set_init_data(self):
         with open(
@@ -29,12 +46,13 @@ class RedisClient:
                     symbol = self.add_prefix_to_symbol(
                         settings.REDIS_PREFIX, company.get("symbol").lower()
                     )
-                    self.redis_client.zadd(
-                        settings.REDIS_LEADERBOARD, {symbol: company.get("marketCap")}
+                    SyncAppRequest(
+                        "ZADD",
+                        settings.REDIS_LEADERBOARD,
+                        {symbol: company.get("marketCap")},
                     )
-
-                    self.redis_client.hset(symbol, "company", company.get("company"))
-                    self.redis_client.hset(symbol, "country", company.get("country"))
+                    SyncAppRequest("HSET", symbol, "company", company.get("company"))
+                    SyncAppRequest("HSET", symbol, "country", company.get("country"))
             except ConnectionError:
                 if settings.REDIS_URL:
                     error_message = (
@@ -44,6 +62,7 @@ class RedisClient:
                     error_message = f"Redis connection time out to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
                 logger.error(error_message)
                 return
+        return None
 
     @staticmethod
     def add_prefix_to_symbol(prefix, symbol):
@@ -54,17 +73,18 @@ class RedisClient:
         return symbol.replace(f"{prefix}:", "")
 
 
-class CompaniesRanks(RedisClient):
+class CompaniesRanks:
     def update_company_market_capitalization(self, amount, symbol):
-        self.redis_client.zincrby(
+        SyncAppRequest(
+            "ZINCRBY",
             settings.REDIS_LEADERBOARD,
             amount,
             self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
         )
+        return None
 
     def get_ranks_by_sort_key(self, key):
         sort_key = RankSortKeys(key)
-
         if sort_key is RankSortKeys.ALL:
             return self.get_zrange(0, -1)
         elif sort_key is RankSortKeys.TOP10:
@@ -81,7 +101,6 @@ class CompaniesRanks(RedisClient):
             for symbol in symbols
         ]
         companies = []
-
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(
                 [
@@ -89,7 +108,6 @@ class CompaniesRanks(RedisClient):
                     market_capitalization,
                 ]
             )
-
         return self.get_result(companies)
 
     def get_zrange(self, start_index, stop_index, desc=True):
@@ -100,23 +118,20 @@ class CompaniesRanks(RedisClient):
             "withscores": True,
             "score_cast_func": str,
         }
-
         if desc:
-            companies = self.redis_client.zrevrange(**query_args)
+            companies = SyncAppRequest("ZREVRANGE", **query_args)
         else:
-            companies = self.redis_client.zrange(**query_args)
-
+            companies = SyncAppRequest("ZRANGE", **query_args)
         return self.get_result(companies, start_index, desc)
 
     def get_result(self, companies, start_index=0, desc=True):
-        start_rank = int(start_index) + 1 if desc else (len(companies) - start_index)
+        start_rank = int(start_index) + 1 if desc else len(companies) - start_index
         increase_factor = 1 if desc else -1
         results = []
-
         for company in companies:
             symbol = company[0]
             market_cap = company[1]
-            company_info = self.redis_client.hgetall(symbol)
+            company_info = SyncAppRequest("HGETALL", symbol)
             results.append(
                 {
                     "company": company_info["company"],
@@ -129,5 +144,4 @@ class CompaniesRanks(RedisClient):
                 }
             )
             start_rank += increase_factor
-
         return json.dumps(results)
