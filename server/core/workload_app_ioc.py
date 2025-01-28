@@ -1,5 +1,5 @@
 import asyncio
-from .companies_redis import CompaniesRanks
+from .companies_redis_IOC import CompaniesRanks
 import math
 import numpy as np
 import json
@@ -8,7 +8,7 @@ import time
 from mdlin import AppRequest, AppResponse
 
 
-def create():
+def run_workload():
     num_minutes = 1
     api = [
         "update_company_market_capitalization",

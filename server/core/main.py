@@ -1,5 +1,5 @@
 from .companies_redis import RedisClient
-from .workload import (
+from .workload_app_ioc import (
     create,
 )
 

@@ -4,9 +4,10 @@ import enum
 import logging
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
+from mdlin import SyncAppRequest, SyncAppResponse
+
 
 logger = logging.getLogger(__name__)
-from mdlin import SyncAppRequest
 
 
 class RankSortKeys(enum.Enum):
