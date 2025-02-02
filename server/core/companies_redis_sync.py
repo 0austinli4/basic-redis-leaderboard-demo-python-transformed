@@ -86,7 +86,6 @@ class CompaniesRanks:
                     self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
                 )
             )
-
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(

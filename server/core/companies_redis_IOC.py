@@ -98,7 +98,11 @@ class CompaniesRanks(RedisClient):
                 self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
             )
             pending_awaits.add(future_0)
-            companies_capitalization.append(AppResponse(future_0))
+
+        # this is the ideal for ioc since it sends all AppRequests first and then
+        # gets their responses?
+        for future in pending_awaits:
+            companies_capitalization.append(AppResponse(future))
             pending_awaits.remove(future_0)
 
         companies = []
