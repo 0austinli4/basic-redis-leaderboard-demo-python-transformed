@@ -22,16 +22,16 @@ def run_workload():
     while time.time() < t_end:
         app_request_type = random.randint(1, 100)
         before = time.time_ns()
-        if app_request_type <= 2:
+        if app_request_type <= 10:
             selector = 0
             amount = random.uniform(1e6, 1e9)
             symbol = random.choice(["AAPL", "GOOG", "AMZN", "MSFT"])
             CompaniesRanks().update_company_market_capitalization(amount, symbol)
-        elif app_request_type <= 10:
+        elif app_request_type <= 40:
             selector = 1
             sort_key = random.choice(["market_cap", "revenue", "profit"])
             CompaniesRanks().get_ranks_by_sort_key(sort_key)
-        elif app_request_type <= 50:
+        elif app_request_type <= 70:
             selector = 2
             symbols = random.sample(["AAPL", "GOOG", "AMZN", "MSFT", "TSLA"], 2)
             CompaniesRanks().get_ranks_by_symbols(symbols)

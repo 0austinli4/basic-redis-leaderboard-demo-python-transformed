@@ -4,7 +4,7 @@ import enum
 import logging
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
-from mdlin import SyncAppRequest, SyncAppResponse
+from mdlin import SyncAppRequest
 
 
 logger = logging.getLogger(__name__)
