@@ -89,14 +89,20 @@ class CompaniesRanks(RedisClient):
 
     def get_ranks_by_symbols(self, symbols):
         pending_awaits = {*()}
-        companies_capitalization = [
-            self.redis_client.zscore(
+        companies_capitalization = []
+
+        for symbol in symbols:
+            future_0 = AppRequest(
+                "ZSCORE",
                 settings.REDIS_LEADERBOARD,
                 self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
             )
-            for symbol in symbols
-        ]
+            pending_awaits.add(future_0)
+            companies_capitalization.append(AppResponse(future_0))
+            pending_awaits.remove(future_0)
+
         companies = []
+
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(
                 [

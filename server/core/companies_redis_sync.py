@@ -77,13 +77,16 @@ class CompaniesRanks:
             return self.get_zrange(0, 9, False)
 
     def get_ranks_by_symbols(self, symbols):
-        companies_capitalization = [
-            self.redis_client.zscore(
-                settings.REDIS_LEADERBOARD,
-                self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
+        companies_capitalization = []
+        for symbol in symbols:
+            companies_capitalization.append(
+                SyncAppRequest(
+                    "ZSCORE",
+                    settings.REDIS_LEADERBOARD,
+                    self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
+                )
             )
-            for symbol in symbols
-        ]
+
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(
