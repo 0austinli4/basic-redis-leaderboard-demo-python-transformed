@@ -19,24 +19,7 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
-        try:
-            if settings.REDIS_URL:
-                self.redis_client = Redis.from_url(
-                    url=settings.REDIS_URL, decode_responses=True
-                )
-            else:
-                self.redis_client = Redis(
-                    host=settings.REDIS_HOST,
-                    port=settings.REDIS_PORT,
-                    password=settings.REDIS_PASSWORD,
-                    db=settings.REDIS_DB,
-                    decode_responses=True,
-                )
-        except RedisError:
-            logger.error(
-                f"Redis failed connection to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
-            )
-            return
+        pass
 
     def set_init_data(self):
         pending_awaits = {*()}
