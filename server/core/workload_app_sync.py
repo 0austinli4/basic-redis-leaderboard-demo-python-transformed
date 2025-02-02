@@ -28,7 +28,7 @@ def run_workload():
             CompaniesRanks().update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
             selector = 1
-            sort_key = random.choice(["market_cap", "revenue", "profit"])
+            sort_key = random.choice(["marketCap", "company", "country"])
             CompaniesRanks().get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
             selector = 2
