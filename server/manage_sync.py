@@ -4,6 +4,7 @@
 import os
 import sys
 from core.workload_app_sync import run_workload
+from mdlin import InitCustom
 
 
 def main():
@@ -16,7 +17,8 @@ def main():
 
     client_id = sys.argv[1]
 
-    run_workload(client_id)
+    InitCustom(client_id)
+    run_workload()
     # try:
     #     from django.core.management import execute_from_command_line
     # except ImportError as exc:
