@@ -7,7 +7,6 @@ from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
 from mdlin import AppRequest, AppResponse
 
-
 logger = logging.getLogger(__name__)
 
 
