@@ -21,8 +21,8 @@ def run_workload():
     selector = 0
 
     pending_awaits, _ = RedisClient.set_init_data()
-    for pend_await in pending_awaits:
-        AppResponse(pend_await)
+    for future in pending_awaits:
+        AppResponse(future)
 
     while time.time() < t_end:
         app_request_type = random.randint(1, 100)

@@ -76,9 +76,9 @@ class CompaniesRanks(RedisClient):
             self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
         )
         pending_awaits.add(future_0)
-        for pend_await in pending_awaits:
-            AppResponse(pend_await)
-        return None
+        for future in pending_awaits:
+            AppResponse(future)
+        return pending_awaits, None
 
     def get_ranks_by_sort_key(self, key):
         pending_awaits = {*()}
@@ -86,21 +86,21 @@ class CompaniesRanks(RedisClient):
         if sort_key is RankSortKeys.ALL:
             pending_awaits_get_zrange, res = self.get_zrange(0, -1)
             pending_awaits.update(pending_awaits_get_zrange)
-            for pend_await in pending_awaits:
-                AppResponse(pend_await)
-            return res
+            for future in pending_awaits:
+                AppResponse(future)
+            return pending_awaits, res
         elif sort_key is RankSortKeys.TOP10:
             pending_awaits_get_zrange, res = self.get_zrange(0, 9)
             pending_awaits.update(pending_awaits_get_zrange)
-            for pend_await in pending_awaits:
-                AppResponse(pend_await)
-            return res
+            for future in pending_awaits:
+                AppResponse(future)
+            return pending_awaits, res
         elif sort_key is RankSortKeys.BOTTOM10:
             pending_awaits_get_zrange, res = self.get_zrange(0, 9, False)
             pending_awaits.update(pending_awaits_get_zrange)
-            for pend_await in pending_awaits:
-                AppResponse(pend_await)
-            return res
+            for future in pending_awaits:
+                AppResponse(future)
+            return pending_awaits, res
 
     def get_ranks_by_symbols(self, symbols):
         pending_awaits = {*()}
@@ -114,8 +114,7 @@ class CompaniesRanks(RedisClient):
             )
             pending_awaits.add(future_0)
 
-        # this is the ideal for ioc since it sends all AppRequests first and then
-        # gets their responses?
+        # manually fixed the for loop, should send all requests and then get their responses?
         for future in pending_awaits:
             companies_capitalization.append(AppResponse(future))
             pending_awaits.remove(future_0)
@@ -132,9 +131,9 @@ class CompaniesRanks(RedisClient):
 
         pending_awaits_get_result, res = self.get_result(companies)
         pending_awaits.update(pending_awaits_get_result)
-        for pend_await in pending_awaits:
-            AppResponse(pend_await)
-        return res
+        for future in pending_awaits:
+            AppResponse(future)
+        return pending_awaits, res
 
     def get_zrange(self, start_index, stop_index, desc=True):
         pending_awaits = {*()}
@@ -159,10 +158,10 @@ class CompaniesRanks(RedisClient):
         pending_awaits_get_result, res = self.get_result(companies, start_index, desc)
         pending_awaits.update(pending_awaits_get_result)
 
-        for pend_await in pending_awaits:
-            AppResponse(pend_await)
+        for future in pending_awaits:
+            AppResponse(future)
 
-        return res
+        return pending_awaits, res
 
     def get_result(self, companies, start_index=0, desc=True):
         pending_awaits = {*()}
