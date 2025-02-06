@@ -1,11 +1,12 @@
 import asyncio
 from .companies_redis_IOC import CompaniesRanks
+from .companies_redis_IOC import RedisClient
 import math
 import numpy as np
 import json
 import random
 import time
-# from mdlin import AppRequest, AppResponse
+from mdlin import AppRequest, AppResponse
 
 
 def run_workload():
@@ -18,6 +19,10 @@ def run_workload():
     ]
     t_end = time.time() + 60 * num_minutes
     selector = 0
+
+    pending_awaits, _ = RedisClient.set_init_data()
+    for pend_await in pending_awaits:
+        AppResponse(pend_await)
 
     while time.time() < t_end:
         app_request_type = random.randint(1, 100)

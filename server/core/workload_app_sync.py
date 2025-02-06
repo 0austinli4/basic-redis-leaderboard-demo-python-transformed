@@ -1,5 +1,6 @@
 import asyncio
 from .companies_redis_sync import CompaniesRanks
+from .companies_redis_sync import RedisClient
 import math
 import numpy as np
 import json
@@ -17,6 +18,8 @@ def run_workload():
     ]
     t_end = time.time() + 60 * num_minutes
     selector = 0
+
+    RedisClient.set_init_data()
 
     while time.time() < t_end:
         app_request_type = random.randint(1, 100)

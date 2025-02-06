@@ -76,16 +76,31 @@ class CompaniesRanks(RedisClient):
             self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
         )
         pending_awaits.add(future_0)
-        return (pending_awaits, None)
+        for pend_await in pending_awaits:
+            AppResponse(pend_await)
+        return None
 
     def get_ranks_by_sort_key(self, key):
+        pending_awaits = {*()}
         sort_key = RankSortKeys(key)
         if sort_key is RankSortKeys.ALL:
-            return self.get_zrange(0, -1)
+            pending_awaits_get_zrange, res = self.get_zrange(0, -1)
+            pending_awaits.update(pending_awaits_get_zrange)
+            for pend_await in pending_awaits:
+                AppResponse(pend_await)
+            return res
         elif sort_key is RankSortKeys.TOP10:
-            return self.get_zrange(0, 9)
+            pending_awaits_get_zrange, res = self.get_zrange(0, 9)
+            pending_awaits.update(pending_awaits_get_zrange)
+            for pend_await in pending_awaits:
+                AppResponse(pend_await)
+            return res
         elif sort_key is RankSortKeys.BOTTOM10:
-            return self.get_zrange(0, 9, False)
+            pending_awaits_get_zrange, res = self.get_zrange(0, 9, False)
+            pending_awaits.update(pending_awaits_get_zrange)
+            for pend_await in pending_awaits:
+                AppResponse(pend_await)
+            return res
 
     def get_ranks_by_symbols(self, symbols):
         pending_awaits = {*()}
@@ -114,7 +129,12 @@ class CompaniesRanks(RedisClient):
                     market_capitalization,
                 ]
             )
-        return (pending_awaits, self.get_result(companies))
+
+        pending_awaits_get_result, res = self.get_result(companies)
+        pending_awaits.update(pending_awaits_get_result)
+        for pend_await in pending_awaits:
+            AppResponse(pend_await)
+        return res
 
     def get_zrange(self, start_index, stop_index, desc=True):
         pending_awaits = {*()}
@@ -136,7 +156,13 @@ class CompaniesRanks(RedisClient):
             companies = AppResponse(future_1)
             pending_awaits.remove(future_1)
 
-        return (pending_awaits, self.get_result(companies, start_index, desc))
+        pending_awaits_get_result, res = self.get_result(companies, start_index, desc)
+        pending_awaits.update(pending_awaits_get_result)
+
+        for pend_await in pending_awaits:
+            AppResponse(pend_await)
+
+        return res
 
     def get_result(self, companies, start_index=0, desc=True):
         pending_awaits = {*()}
