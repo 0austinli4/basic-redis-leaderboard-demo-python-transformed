@@ -17,7 +17,7 @@ def main():
 
     client_id = sys.argv[1]
 
-    InitCustom(client_id)
+    InitCustom(client_id, "mdl")
     run_workload()
     # try:
     #     from django.core.management import execute_from_command_line
