@@ -5,7 +5,7 @@ import numpy as np
 import json
 import random
 import time
-from mdlin import AppRequest, AppResponse
+# from mdlin import AppRequest, AppResponse
 
 
 def run_workload():
@@ -29,7 +29,7 @@ def run_workload():
             CompaniesRanks().update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
             selector = 1
-            sort_key = random.choice(["marketCap", "company", "country"])
+            sort_key = random.choice(["all", "top10", "bottom10"])
             CompaniesRanks().get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
             selector = 2
