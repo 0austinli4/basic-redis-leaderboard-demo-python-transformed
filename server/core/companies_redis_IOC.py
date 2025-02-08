@@ -55,6 +55,8 @@ class RedisClient:
                     error_message = f"Redis connection time out to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
                 logger.error(error_message)
                 return
+        for future in pending_awaits:
+            AppResponse(future)
         return (pending_awaits, None)
 
     @staticmethod
@@ -106,6 +108,8 @@ class CompaniesRanks(RedisClient):
         pending_awaits = {*()}
         companies_capitalization = []
 
+        # the transform thinks there's a dependency here because of
+        # the append statement - function needs to get separated
         for symbol in symbols:
             future_0 = AppRequest(
                 "ZSCORE",
