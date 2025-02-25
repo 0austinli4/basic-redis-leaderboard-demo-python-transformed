@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 
+import argparse
 import os
 import sys
 from core.workload_app_sync import run_workload
@@ -11,12 +12,17 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configuration.settings")
 
-    if len(sys.argv) < 2:
-        print("Usage: python app.py <client_id>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Run workload with client_id and experiment length."
+    )
+    parser.add_argument("--client_id", type=str, help="Client ID")
+    parser.add_argument(
+        "--explen", type=int, required=True, help="Experiment length in seconds"
+    )
 
-    client_id = sys.argv[1]
-    exp_length = sys.argv[2]
+    args = parser.parse_args()
+    client_id = args.client_id
+    exp_length = args.explen  # Now it's properly parsed as an integer
 
     InitCustom(client_id, "multi_paxos")
     run_workload(exp_length)

@@ -5,18 +5,24 @@ import os
 import sys
 from core.workload_app_ioc import run_workload
 from mdlin import InitCustom
+import argparse
 
 
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configuration.settings")
 
-    if len(sys.argv) < 2:
-        print("Usage: python app.py <client_id>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Run workload with client_id and experiment length."
+    )
+    parser.add_argument("--client_id", type=str, help="Client ID")
+    parser.add_argument(
+        "--explen", type=int, required=True, help="Experiment length in seconds"
+    )
 
-    client_id = sys.argv[1]
-    exp_length = sys.argv[2]
+    args = parser.parse_args()
+    client_id = args.client_id
+    exp_length = args.explen  # Now it's properly parsed as an integer
 
     InitCustom(client_id, "mdl")
     run_workload(exp_length)
