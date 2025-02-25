@@ -21,7 +21,8 @@ class RedisClient:
 
     def set_init_data(self):
         with open(
-            os.path.join(settings.BASE_DIR, "companies_data.json"), "r"
+            "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
+            "r",
         ) as init_data:
             companies = json.load(init_data)
             try:
