@@ -52,7 +52,6 @@ class RedisClient:
                 else:
                     error_message = f"Redis connection time out to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
                 logger.error(error_message)
-                return
         return (pending_awaits, None)
 
     @staticmethod
@@ -74,6 +73,8 @@ class CompaniesRanks(RedisClient):
             self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
         )
         pending_awaits.add(future_0)
+        for future in pending_awaits:
+            AppResponse(future)
         return (pending_awaits, None)
 
     def get_ranks_by_sort_key(self, key):
@@ -135,8 +136,7 @@ class CompaniesRanks(RedisClient):
         start_rank = int(start_index) + 1 if desc else len(companies) - start_index
         increase_factor = 1 if desc else -1
         results = []
-        company_info = AppResponse(future_0)
-        pending_awaits.remove(future_0)
+
         for company in companies:
             symbol = company[0]
             market_cap = company[1]
@@ -158,4 +158,4 @@ class CompaniesRanks(RedisClient):
             start_rank += increase_factor
         for future in pending_awaits:
             AppResponse(future)
-        return (pending_awaits, json.dumps(results))
+        return json.dumps(results)

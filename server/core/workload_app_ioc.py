@@ -20,7 +20,10 @@ def run_workload(exp_length):
     t_end = time.time() + num_seconds
     selector = 0
 
-    pending_awaits, _ = RedisClient.set_init_data()
+    redis_client = RedisClient()
+    company = CompaniesRanks(redis_client)
+    pending_awaits, _ = redis_client.set_init_data()
+
     for future in pending_awaits:
         AppResponse(future)
 
@@ -31,20 +34,20 @@ def run_workload(exp_length):
             selector = 0
             amount = random.uniform(1e6, 1e9)
             symbol = random.choice(["AAPL", "GOOG", "AMZN", "MSFT"])
-            CompaniesRanks().update_company_market_capitalization(amount, symbol)
+            company.update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
             selector = 1
             sort_key = random.choice(["all", "top10", "bottom10"])
-            CompaniesRanks().get_ranks_by_sort_key(sort_key)
+            company.get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
             selector = 2
             symbols = random.sample(["AAPL", "GOOG", "AMZN", "MSFT", "TSLA"], 2)
-            CompaniesRanks().get_ranks_by_symbols(symbols)
+            company.get_ranks_by_symbols(symbols)
         else:
             selector = 3
             start_index = random.randint(0, 10)
             end_index = start_index + random.randint(1, 5)
-            CompaniesRanks().get_zrange(start_index, end_index)
+            company.get_zrange(start_index, end_index)
 
         after = time.time_ns()
         lat = after - before
