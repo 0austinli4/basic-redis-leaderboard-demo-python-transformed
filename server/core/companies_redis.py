@@ -17,12 +17,12 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
-        settings.configure()
-        pass
+        if not settings.configured:
+            settings.configure()
 
     def set_init_data(self):
         with open(
-            "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
+            "server/core/companies_data.json",
             "r",
         ) as init_data:
             companies = json.load(init_data)

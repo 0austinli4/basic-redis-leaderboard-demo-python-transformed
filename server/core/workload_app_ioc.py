@@ -1,6 +1,5 @@
 import asyncio
-from .companies_redis_IOC import CompaniesRanks
-from .companies_redis_IOC import RedisClient
+from .companies_redis_IOC import CompaniesRanks,RedisClient
 import math
 import numpy as np
 import json
@@ -10,6 +9,10 @@ from mdlin import AppRequest, AppResponse
 
 
 def run_workload(exp_length):
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
+    django.setup()
+    
     num_seconds = int(exp_length)
     api = [
         "update_company_market_capitalization",
