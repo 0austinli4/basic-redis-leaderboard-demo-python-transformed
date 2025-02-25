@@ -17,6 +17,7 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
+        settings.configure()
         pass
 
     def set_init_data(self):

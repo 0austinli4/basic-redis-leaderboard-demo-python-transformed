@@ -17,7 +17,8 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
-        settings.configure()
+        if not settings.configured:
+            settings.configure()
 
     def set_init_data(self):
         pending_awaits = {*()}
