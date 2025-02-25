@@ -10,14 +10,14 @@ from mdlin import AppRequest, AppResponse
 
 
 def run_workload(exp_length):
-    num_minutes = exp_length
+    num_seconds = int(exp_length)
     api = [
         "update_company_market_capitalization",
         "get_ranks_by_sort_key",
         "get_ranks_by_symbols",
         "get_zrange",
     ]
-    t_end = time.time() + 60 * num_minutes
+    t_end = time.time() + num_seconds
     selector = 0
 
     pending_awaits, _ = RedisClient.set_init_data()
