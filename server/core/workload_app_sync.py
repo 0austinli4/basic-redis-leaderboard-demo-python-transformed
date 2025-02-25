@@ -1,6 +1,6 @@
 import asyncio
 import os
-from .companies_redis import CompaniesRanks, RedisClient
+from .companies_redis_sync import CompaniesRanks, RedisClient
 import math
 import numpy as np
 import json
@@ -10,6 +10,7 @@ import django
 import sys
 
 def run_workload(exp_length):
+    print("Trying to start workload")
 
     num_seconds = 20
     api = [

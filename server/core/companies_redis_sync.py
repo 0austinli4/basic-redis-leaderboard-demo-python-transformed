@@ -18,12 +18,13 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
+        print("init redis client")
         if not settings.configured:
             settings.configure()
             sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
             os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
             django.setup()
-            
+
     def set_init_data(self):
         with open(
             "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",

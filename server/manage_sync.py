@@ -14,6 +14,7 @@ def main():
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
     # django.setup()
+    print("Running manage sync")
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
