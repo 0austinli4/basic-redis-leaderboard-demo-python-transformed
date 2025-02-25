@@ -21,7 +21,7 @@ def main():
     )
 
     args = parser.parse_args()
-    client_id = args.client_id
+    client_id = args.clientid
     exp_length = args.explen  # Now it's properly parsed as an integer
 
     InitCustom(client_id, "multi_paxos")
