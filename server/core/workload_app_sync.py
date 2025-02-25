@@ -1,6 +1,6 @@
 import asyncio
 import os
-from .companies_redis_sync import CompaniesRanks, RedisClient
+from .companies_redis import CompaniesRanks, RedisClient
 import math
 import numpy as np
 import json
