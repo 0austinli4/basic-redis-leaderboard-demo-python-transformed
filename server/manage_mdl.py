@@ -16,9 +16,10 @@ def main():
         sys.exit(1)
 
     client_id = sys.argv[1]
+    exp_length = sys.argv[2]
 
     InitCustom(client_id, "mdl")
-    run_workload()
+    run_workload(exp_length)
     # try:
     #     from django.core.management import execute_from_command_line
     # except ImportError as exc:

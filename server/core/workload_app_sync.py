@@ -8,8 +8,8 @@ import random
 import time
 
 
-def run_workload():
-    num_minutes = 1
+def run_workload(exp_length):
+    num_minutes = exp_length
     api = [
         "update_company_market_capitalization",
         "get_ranks_by_sort_key",
