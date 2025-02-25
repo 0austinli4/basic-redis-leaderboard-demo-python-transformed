@@ -3,15 +3,17 @@
 
 import os
 import sys
-from core.workload_app_ioc import run_workload
+from server.core.workload_app_sync import run_workload
 from mdlin import InitCustom
 import argparse
 from django.conf import settings
-
+import django
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configuration.settings")
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
+    # django.setup()
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
