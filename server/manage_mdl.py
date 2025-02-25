@@ -6,6 +6,7 @@ import sys
 from core.workload_app_ioc import run_workload
 from mdlin import InitCustom
 import argparse
+from django.conf import settings
 
 
 def main():
@@ -25,6 +26,7 @@ def main():
     exp_length = args.explen  # Now it's properly parsed as an integer
 
     InitCustom(client_id, "mdl")
+    settings.configure()
     run_workload(exp_length)
     # try:
     #     from django.core.management import execute_from_command_line

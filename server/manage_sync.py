@@ -6,6 +6,7 @@ import os
 import sys
 from core.workload_app_sync import run_workload
 from mdlin import InitCustom
+from django.conf import settings
 
 
 def main():
@@ -25,6 +26,7 @@ def main():
     exp_length = args.explen  # Now it's properly parsed as an integer
 
     InitCustom(client_id, "multi_paxos")
+    settings.configure()
     run_workload(exp_length)
     # try:
     #     from django.core.management import execute_from_command_line
