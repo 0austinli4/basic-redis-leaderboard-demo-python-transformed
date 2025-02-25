@@ -15,7 +15,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
     )
-    parser.add_argument("--client_id", type=str, help="Client ID")
+    parser.add_argument("--clientid", type=str, help="Client ID")
     parser.add_argument(
         "--explen", type=int, required=True, help="Experiment length in seconds"
     )
