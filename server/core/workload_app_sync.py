@@ -20,7 +20,7 @@ def run_workload(exp_length):
     selector = 0
 
     redis_client = RedisClient()
-    company = CompaniesRanks(redis_client)
+    company = CompaniesRanks()
     redis_client.set_init_data()
 
     while time.time() < t_end:

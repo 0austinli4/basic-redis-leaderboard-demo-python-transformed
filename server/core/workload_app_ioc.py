@@ -21,7 +21,7 @@ def run_workload(exp_length):
     selector = 0
 
     redis_client = RedisClient()
-    company = CompaniesRanks(redis_client)
+    company = CompaniesRanks()
     pending_awaits, _ = redis_client.set_init_data()
 
     for future in pending_awaits:
