@@ -20,8 +20,12 @@ class RedisClient:
     def __init__(self):
         if not settings.configured:
             settings.configure()
-            sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
+            sys.path.append(
+                os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+            )
+            os.environ.setdefault(
+                "DJANGO_SETTINGS_MODULE", "server.configuration.settings"
+            )
             django.setup()
 
     def set_init_data(self):
@@ -110,9 +114,13 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
-            companies = SyncAppRequest("ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
+            companies = SyncAppRequest(
+                "ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
+            )
         else:
-            companies = SyncAppRequest("ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
+            companies = SyncAppRequest(
+                "ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
+            )
         return self.get_result(companies, start_index, desc)
 
     def get_result(self, companies, start_index=0, desc=True):
@@ -136,9 +144,3 @@ class CompaniesRanks(RedisClient):
             )
             start_rank += increase_factor
         return json.dumps(results)
-
-    def add_prefix_to_symbol(prefix, symbol):
-        return f"{prefix}:{symbol}"
-
-    def remove_prefix_to_symbol(prefix, symbol):
-        return symbol.replace(f"{prefix}:", "")

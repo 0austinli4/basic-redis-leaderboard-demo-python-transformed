@@ -133,10 +133,14 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
-            future_0 = AppRequest("ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
+            future_0 = AppRequest(
+                "ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
+            )
             pending_awaits.append(future_0)
         else:
-            future_1 = AppRequest("ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
+            future_1 = AppRequest(
+                "ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
+            )
             pending_awaits.append(future_1)
         companies = AppResponse(pending_awaits.pop())
         res = self.get_result(companies, start_index, desc)
@@ -174,9 +178,3 @@ class CompaniesRanks(RedisClient):
         for future in pending_awaits:
             AppResponse(future)
         return (pending_awaits, json.dumps(results))
-
-    def add_prefix_to_symbol(prefix, symbol):
-        return f"{prefix}:{symbol}"
-
-    def remove_prefix_to_symbol(prefix, symbol):
-        return symbol.replace(f"{prefix}:", "")
