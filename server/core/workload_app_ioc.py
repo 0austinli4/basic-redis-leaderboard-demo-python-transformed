@@ -1,5 +1,5 @@
 import asyncio
-from .companies_redis_IOC import CompaniesRanks,RedisClient
+from .companies_redis_IOC import CompaniesRanks, RedisClient
 import math
 import numpy as np
 import json
@@ -9,7 +9,6 @@ from mdlin import AppRequest, AppResponse
 
 
 def run_workload(exp_length):
-
     num_seconds = int(exp_length)
     api = [
         "update_company_market_capitalization",

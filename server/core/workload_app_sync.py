@@ -1,6 +1,6 @@
 import asyncio
 import os
-from .companies_redis_sync import CompaniesRanks, RedisClient
+from .companies_redis_sync import CompaniesRanks, RedisClient, RankSortKeys
 import math
 import numpy as np
 import json
@@ -8,6 +8,7 @@ import random
 import time
 import django
 import sys
+
 
 def run_workload(exp_length):
     print("Trying to start workload")
@@ -36,7 +37,7 @@ def run_workload(exp_length):
             company.update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
             selector = 1
-            sort_key = random.choice(["marketCap", "company", "country"])
+            sort_key = random.choice(["all", "top10", "bottom10"])
             company.get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
             selector = 2
