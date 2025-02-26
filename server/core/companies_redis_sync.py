@@ -110,9 +110,9 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
-            companies = SyncAppRequest("ZREVRANGE", **query_args)
+            companies = SyncAppRequest("ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
         else:
-            companies = SyncAppRequest("ZRANGE", **query_args)
+            companies = SyncAppRequest("ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
         return self.get_result(companies, start_index, desc)
 
     def get_result(self, companies, start_index=0, desc=True):

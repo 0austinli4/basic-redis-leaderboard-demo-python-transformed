@@ -133,10 +133,10 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
-            future_0 = AppRequest("ZREVRANGE", **query_args)
+            future_0 = AppRequest("ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
             pending_awaits.append(future_0)
         else:
-            future_1 = AppRequest("ZRANGE", **query_args)
+            future_1 = AppRequest("ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index)
             pending_awaits.append(future_1)
         companies = AppResponse(pending_awaits.pop())
         res = self.get_result(companies, start_index, desc)
