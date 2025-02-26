@@ -1,3 +1,4 @@
+from collections import deque
 import os
 import json
 import enum
@@ -19,8 +20,12 @@ class RedisClient:
     def __init__(self):
         if not settings.configured:
             settings.configure()
-            sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
+            sys.path.append(
+                os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+            )
+            os.environ.setdefault(
+                "DJANGO_SETTINGS_MODULE", "server.configuration.settings"
+            )
             django.setup()
 
     def set_init_data(self):
@@ -92,6 +97,7 @@ class CompaniesRanks(RedisClient):
             return self.get_zrange(0, 9, False)
 
     def get_ranks_by_symbols(self, symbols):
+        dep_vars_queue = deque()
         pending_awaits = {*()}
         companies_capitalization = []
 
@@ -101,9 +107,9 @@ class CompaniesRanks(RedisClient):
                 settings.REDIS_LEADERBOARD,
                 self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbol),
             )
-            pending_awaits.add(future_0)
-            zscore = AppResponse(future_0)
-            pending_awaits.remove(future_0)
+            dep_vars_queue.append(future_0)
+        for symbol in symbols:
+            zscore = AppResponse(dep_vars_queue.popleft())
             companies_capitalization.append(zscore)
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
@@ -137,6 +143,7 @@ class CompaniesRanks(RedisClient):
         return (pending_awaits, res)
 
     def get_result(self, companies, start_index=0, desc=True):
+        dep_vars_queue = deque()
         pending_awaits = {*()}
         start_rank = int(start_index) + 1 if desc else len(companies) - start_index
         increase_factor = 1 if desc else -1
@@ -146,24 +153,28 @@ class CompaniesRanks(RedisClient):
             symbol = company[0]
             market_cap = company[1]
             future_0 = AppRequest("HGETALL", symbol)
-            pending_awaits.add(future_0)
-            company_info = AppResponse(future_0)
-            pending_awaits.remove(future_0)
+            dep_vars_queue.append(future_0)
+            dep_vars_queue.append(market_cap)
+            dep_vars_queue.append(start_rank)
+            dep_vars_queue.append(symbol)
+            start_rank += increase_factor
+        for company in companies:
+            company_info = AppResponse(dep_vars_queue.popleft())
             results.append(
                 {
                     "company": company_info["company"],
                     "country": company_info["country"],
-                    "marketCap": market_cap,
-                    "rank": start_rank,
+                    "marketCap": dep_vars_queue.popleft(),
+                    "rank": dep_vars_queue.popleft(),
                     "symbol": self.remove_prefix_to_symbol(
-                        settings.REDIS_PREFIX, symbol
+                        settings.REDIS_PREFIX, dep_vars_queue.popleft()
                     ),
                 }
             )
-            start_rank += increase_factor
         for future in pending_awaits:
             AppResponse(future)
-        return json.dumps(results)
+        return (pending_awaits, json.dumps(results))
+
     def add_prefix_to_symbol(prefix, symbol):
         return f"{prefix}:{symbol}"
 
