@@ -136,3 +136,9 @@ class CompaniesRanks:
             )
             start_rank += increase_factor
         return json.dumps(results)
+
+    def add_prefix_to_symbol(prefix, symbol):
+        return f"{prefix}:{symbol}"
+
+    def remove_prefix_to_symbol(prefix, symbol):
+        return symbol.replace(f"{prefix}:", "")
