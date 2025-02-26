@@ -3,6 +3,7 @@ import os
 import sys
 from server.core.workload_app_sync import run_workload
 from django.conf import settings
+from mdlin import InitCustom
 import django
 
 def main():
@@ -33,9 +34,7 @@ def main():
 
     print(f"Client ID: {client_id}, Experiment Length: {exp_length}")
 
-    # Print current settings
-    print("Current settings:", dir(settings))
-    print("INSTALLED_APPS:", settings.INSTALLED_APPS)
+    InitCustom(client_id, "multi_paxos")
 
     try:
         run_workload(exp_length)
