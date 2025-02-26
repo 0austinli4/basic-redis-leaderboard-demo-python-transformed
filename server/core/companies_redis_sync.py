@@ -2,6 +2,8 @@ import os
 import json
 import enum
 import logging
+import sys
+import django
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
 from mdlin import SyncAppRequest
@@ -29,6 +31,7 @@ class RedisClient:
             django.setup()
 
     def set_init_data(self):
+        print("Runnning set init data")
         with open(
             "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
             "r",
