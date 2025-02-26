@@ -27,7 +27,7 @@ def main():
     client_id = args.clientid
     exp_length = args.explen  # Now it's properly parsed as an integer
 
-    InitCustom(client_id, "mdl")
+    InitCustom(str(client_id), "mdl")
     settings.configure()
     run_workload(exp_length)
     # try:

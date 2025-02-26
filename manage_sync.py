@@ -34,7 +34,7 @@ def main():
 
     print(f"Client ID: {client_id}, Experiment Length: {exp_length}")
 
-    InitCustom(client_id, "multi_paxos")
+    InitCustom(str(client_id), "multi_paxos")
 
     try:
         run_workload(exp_length)
