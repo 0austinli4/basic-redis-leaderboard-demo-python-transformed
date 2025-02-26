@@ -11,16 +11,11 @@ def main():
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
 
-    # Print the current Python path
-    print("Current Python Path:", sys.path)
-
     try:
         django.setup()
         print("Django setup complete.")
     except Exception as e:
         print("Error during Django setup:", e)
-
-    print("Running manage sync")
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
@@ -31,8 +26,6 @@ def main():
     args = parser.parse_args()
     client_id = args.clientid
     exp_length = args.explen  # Now it's properly parsed as an integer
-
-    print(f"Client ID: {client_id}, Experiment Length: {exp_length}")
 
     InitCustom(str(client_id), "multi_paxos")
 

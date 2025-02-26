@@ -18,7 +18,6 @@ class RankSortKeys(enum.Enum):
 
 class RedisClient:
     def __init__(self):
-        print("init redis client")
         if not settings.configured:
             settings.configure()
             sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

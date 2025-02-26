@@ -8,12 +8,21 @@ from mdlin import InitCustom
 import argparse
 from django.conf import settings
 import django
+import os
+import sys
+from mdlin import InitCustom
+from server.core.workload_app_sync import run_workload
 
 def main():
     """Run administrative tasks."""
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
-    # django.setup()
+
+    try:
+        django.setup()
+        print("Django setup complete.")
+    except Exception as e:
+        print("Error during Django setup:", e)
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
@@ -30,16 +39,6 @@ def main():
     InitCustom(str(client_id), "mdl")
     settings.configure()
     run_workload(exp_length)
-    # try:
-    #     from django.core.management import execute_from_command_line
-    # except ImportError as exc:
-    #     raise ImportError(
-    #         "Couldn't import Django. Are you sure it's installed and "
-    #         "available on your PYTHONPATH environment variable? Did you "
-    #         "forget to activate a virtual environment?"
-    #     ) from exc
-    # execute_from_command_line(sys.argv)
-
 
 if __name__ == "__main__":
     main()
