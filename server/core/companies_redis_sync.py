@@ -62,7 +62,7 @@ class RedisClient:
         return symbol.replace(f"{prefix}:", "")
 
 
-class CompaniesRanks:
+class CompaniesRanks(RedisClient):
     def update_company_market_capitalization(self, amount, symbol):
         SyncAppRequest(
             "ZINCRBY",
