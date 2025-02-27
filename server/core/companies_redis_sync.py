@@ -117,10 +117,12 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
+            print("Sending zrevrange")
             companies = SyncAppRequest(
                 "ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
             )
         else:
+            print("Sending zrange")
             companies = SyncAppRequest(
                 "ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
             )
