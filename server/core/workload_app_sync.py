@@ -25,7 +25,7 @@ def run_workload(exp_length):
 
     redis_client = RedisClient()
     company = CompaniesRanks()
-    
+
     redis_client.set_init_data()
 
     while time.time() < t_end:
