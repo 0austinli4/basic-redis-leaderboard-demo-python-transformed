@@ -138,8 +138,8 @@ class CompaniesRanks(RedisClient):
             company_info = SyncAppRequest("HGETALL", symbol)
             results.append(
                 {
-                    "company": company_info[0],
-                    "country": company_info[0],
+                    "company": "fake",
+                    "country": "fake",
                     "marketCap": market_cap,
                     "rank": start_rank,
                     "symbol": self.remove_prefix_to_symbol(
