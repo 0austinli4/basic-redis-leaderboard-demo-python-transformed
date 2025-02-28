@@ -4,13 +4,14 @@ from mdlin import SyncAppRequest, InitCustom
 
 def init():
     symbol = "AAPL"
+    # Should add AAPL to the list
     SyncAppRequest(
         "ZADD",
         "leaderboard",
         {symbol: 12311400},
     )
-    SyncAppRequest("HSET", symbol, "company", "APPLE")
-    SyncAppRequest("HSET", symbol, "country", "USA")
+    # SyncAppRequest("HSET", symbol, "company", "APPLE")
+    # SyncAppRequest("HSET", symbol, "country", "USA")
     print("init completed")
 
 
