@@ -26,8 +26,8 @@ def get_zrange(start_index, stop_index, desc=True):
 
 def get_result(companies, start_index=0, desc=True):
     symbol = "AAPL"
-    company_info = SyncAppRequest("HGETALL", symbol)
-    print(company_info)
+    # company_info = SyncAppRequest("HGETALL", symbol)
+    print("get reuslt mock")
 
 
 if __name__ == "__main__":
