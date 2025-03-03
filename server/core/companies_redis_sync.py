@@ -116,12 +116,10 @@ class CompaniesRanks(RedisClient):
             "score_cast_func": str,
         }
         if desc:
-            print("Sending zrevrange")
             companies = SyncAppRequest(
                 "ZREVRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
             )
         else:
-            print("Sending zrange")
             companies = SyncAppRequest(
                 "ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
             )
@@ -132,17 +130,17 @@ class CompaniesRanks(RedisClient):
         increase_factor = 1 if desc else -1
         results = []
         for company in companies:
-            symbol = company[0]
-            market_cap = company[1]
-            company_info = SyncAppRequest("HGETALL", symbol)
+            # symbol = company[0]
+            # market_cap = company[1]
+            company_info = SyncAppRequest("HGETALL", company)
             results.append(
                 {
                     "company": company_info["company"],
                     "country": company_info["country"],
-                    "marketCap": market_cap,
+                    "marketCap": 1000,
                     "rank": start_rank,
                     "symbol": self.remove_prefix_to_symbol(
-                        settings.REDIS_PREFIX, symbol
+                        settings.REDIS_PREFIX, company
                     ),
                 }
             )

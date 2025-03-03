@@ -156,11 +156,10 @@ class CompaniesRanks(RedisClient):
         results = []
 
         for company in companies:
-            symbol = company[0]
-            market_cap = company[1]
+            symbol = company
             future_0 = AppRequest("HGETALL", symbol)
             dep_vars_queue.append(future_0)
-            dep_vars_queue.append(market_cap)
+            dep_vars_queue.append(1000)
             dep_vars_queue.append(start_rank)
             dep_vars_queue.append(symbol)
             start_rank += increase_factor
