@@ -116,10 +116,7 @@ class CompaniesRanks(RedisClient):
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(
-                [
-                    self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
-                    market_capitalization,
-                ]
+                self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
             )
         for future in pending_awaits:
             AppResponse(future)
@@ -167,7 +164,7 @@ class CompaniesRanks(RedisClient):
         for company in companies:
             company_info = AppResponse(dep_vars_queue.popleft())
 
-            if company_info:
+            if company_info and isinstance(company_info, dict):
                 results.append(
                     {
                         "company": company_info["company"],

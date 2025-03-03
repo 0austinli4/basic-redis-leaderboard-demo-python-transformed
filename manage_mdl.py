@@ -3,7 +3,7 @@
 
 import os
 import sys
-from server.core.workload_app_sync import run_workload
+from server.core.workload_app_ioc import run_workload
 from mdlin import InitCustom
 import argparse
 from django.conf import settings
