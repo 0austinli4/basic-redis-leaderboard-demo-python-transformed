@@ -100,7 +100,10 @@ class CompaniesRanks(RedisClient):
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
             companies.append(
-                self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
+                [
+                    self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
+                    market_capitalization,
+                ]
             )
         return self.get_result(companies)
 
@@ -126,20 +129,22 @@ class CompaniesRanks(RedisClient):
         start_rank = int(start_index) + 1 if desc else len(companies) - start_index
         increase_factor = 1 if desc else -1
         results = []
-        for company in companies:
-            # symbol = company[0]
-            # market_cap = company[1]
-            company_info = SyncAppRequest("HGETALL", company)
+        
+        for i in range(0, len(companies), 2):
+            member = companies[i]
+            # Ensure there's a score following the member
+            score = companies[i + 1] if i + 1 < len(companies) else None
 
+            company_info = SyncAppRequest("HGETALL", member)
             if company_info and isinstance(company_info, dict):
                 results.append(
                     {
-                        "company": company_info["company"],
-                        "country": company_info["country"],
-                        "marketCap": 1000,
+                        "company": company_info.get("company", ""),
+                        "country": company_info.get("country", ""),
+                        "marketCap": score,  # Using the score from the paired element
                         "rank": start_rank,
                         "symbol": self.remove_prefix_to_symbol(
-                            settings.REDIS_PREFIX, company
+                            settings.REDIS_PREFIX, member
                         ),
                     }
                 )

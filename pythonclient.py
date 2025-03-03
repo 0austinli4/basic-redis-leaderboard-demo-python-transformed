@@ -1,38 +1,40 @@
 import json
 from mdlin import SyncAppRequest, InitCustom
-
-
-def init():
-    symbol = "AAPL"
-    # Should add AAPL to the list
-    SyncAppRequest(
-        "ZADD",
-        "leaderboard",
-        {symbol: 12311400},
-    )
-    # SyncAppRequest("HSET", symbol, "company", "APPLE")
-    # SyncAppRequest("HSET", symbol, "country", "USA")
-    print("init completed")
-
-
-# test the methods from mdlin
-def get_zrange(start_index, stop_index, desc=True):
-    print("Sending zrange request")
-    companies = SyncAppRequest("ZRANGE", "leaderboard", start_index, stop_index)
-    print("Result, companies", companies)
-
-    return get_result(companies, start_index, desc)
-
-
-def get_result(companies, start_index=0, desc=True):
-    symbol = "AAPL"
-    # company_info = SyncAppRequest("HGETALL", symbol)
-    print("get reuslt mock")
+from server.core.companies_redis_sync import CompaniesRanks, RedisClient, RankSortKeys
 
 
 if __name__ == "__main__":
+    # Initialize custom configurations or settings
     InitCustom("0", "multi_paxos")
-    print("Running the python client")
-    init()
-    print("Compelted init")
-    get_zrange(1, 10)
+
+    # Test RedisClient and CompaniesRanks
+    redis_client = RedisClient()
+
+    # Test setting initial data from the companies_data.json file
+    print("Running set_init_data...")
+    redis_client.set_init_data()
+
+    # # Test updating a company's market capitalization
+    # print("Updating market capitalization for 'AAPL'...")
+    companies_ranks = CompaniesRanks()
+    print("Updating market capitalization for multiple companies...")
+    updates = {
+        "AMZN": 1600000000,
+        "MSFT": 1700000000,
+        "TSLA": 850000000,
+    }
+    for symbol, new_cap in updates.items():
+        companies_ranks.update_company_market_capitalization(new_cap, symbol)
+
+    # Test getting ranks by sort key (e.g., TOP10)
+    print("Fetching TOP10 ranks...")
+    top_ranks = companies_ranks.get_ranks_by_sort_key(RankSortKeys.TOP10.value)
+    print("Top Ranks:", top_ranks)
+
+    # Test getting ranks by specific symbols
+    ranks = companies_ranks.get_ranks_by_symbols(["AAPL", "GOOG"])
+    print("Ranks by Symbols:", ranks)
+
+    print("Fetching ranks for symbols AAPL and GOOG...")
+    symbol_ranks = companies_ranks.get_ranks_by_symbols(["AAPL", "GOOG"])
+    print("Ranks by Symbols:", symbol_ranks)
