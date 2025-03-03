@@ -11,9 +11,7 @@ import sys
 
 
 def run_workload(exp_length):
-    print("Trying to start workload")
-
-    num_seconds = 20
+    num_seconds = exp_length
     api = [
         "update_company_market_capitalization",
         "get_ranks_by_sort_key",

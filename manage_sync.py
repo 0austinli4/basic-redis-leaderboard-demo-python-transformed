@@ -14,9 +14,9 @@ def main():
 
     try:
         django.setup()
-        print("Django setup complete.")
+        pass
     except Exception as e:
-        print("Error during Django setup:", e)
+        pass
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."

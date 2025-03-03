@@ -13,16 +13,17 @@ import sys
 from mdlin import InitCustom
 from server.core.workload_app_sync import run_workload
 
+
 def main():
     """Run administrative tasks."""
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.configuration.settings')
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.configuration.settings")
 
     try:
         django.setup()
         print("Django setup complete.")
-    except Exception as e:
-        print("Error during Django setup:", e)
+    except Exception:
+        pass
 
     parser = argparse.ArgumentParser(
         description="Run workload with client_id and experiment length."
@@ -39,6 +40,7 @@ def main():
     InitCustom(str(client_id), "mdl")
     settings.configure()
     run_workload(exp_length)
+
 
 if __name__ == "__main__":
     main()
