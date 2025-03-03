@@ -35,7 +35,7 @@ def main():
 
     args = parser.parse_args()
     client_id = args.clientid
-    exp_length = args.explen  # Now it's properly parsed as an integer
+    exp_length = args.explen
 
     InitCustom(str(client_id), "mdl")
     settings.configure()

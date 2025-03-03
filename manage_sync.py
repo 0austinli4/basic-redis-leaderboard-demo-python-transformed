@@ -15,7 +15,7 @@ def main():
     try:
         django.setup()
         pass
-    except Exception as e:
+    except Exception:
         pass
 
     parser = argparse.ArgumentParser(
