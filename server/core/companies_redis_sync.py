@@ -105,7 +105,6 @@ class CompaniesRanks(RedisClient):
                     market_capitalization,
                 ]
             )
-        print("Input companies to get_result", companies)
         return self.get_result(companies)
 
     def get_zrange(self, start_index, stop_index, desc=True):
@@ -124,7 +123,6 @@ class CompaniesRanks(RedisClient):
             companies = SyncAppRequest(
                 "ZRANGE", settings.REDIS_LEADERBOARD, start_index, stop_index
             )
-        print("Companies result", companies)
         return self.get_result(companies, start_index, desc)
 
     def get_result(self, companies, start_index=0, desc=True):

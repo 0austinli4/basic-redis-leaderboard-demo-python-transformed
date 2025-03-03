@@ -29,27 +29,22 @@ def run_workload(exp_length):
     redis_client.set_init_data()
 
     while time.time() < t_end:
-        print("Starting workload")
         app_request_type = random.randint(1, 100)
         before = time.time_ns()
         if app_request_type <= 10:
-            print("Update company market cap")
             selector = 0
             amount = random.uniform(1e6, 1e9)
             symbol = random.choice(["AAPL", "GOOG", "AMZN", "MSFT"])
             company.update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
-            print("Get ranks by sort key")
             selector = 1
             sort_key = random.choice(["all", "top10", "bottom10"])
             company.get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
-            print("Get ranks by symbol")
             selector = 2
             symbols = random.sample(["AAPL", "GOOG", "AMZN", "MSFT", "TSLA"], 2)
             company.get_ranks_by_symbols(symbols)
         else:
-            print("Get zrange")
             selector = 3
             start_index = random.randint(0, 10)
             end_index = start_index + random.randint(1, 5)
