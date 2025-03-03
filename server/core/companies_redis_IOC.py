@@ -166,17 +166,19 @@ class CompaniesRanks(RedisClient):
 
         for company in companies:
             company_info = AppResponse(dep_vars_queue.popleft())
-            results.append(
-                {
-                    "company": company_info["company"],
-                    "country": company_info["country"],
-                    "marketCap": dep_vars_queue.popleft(),
-                    "rank": dep_vars_queue.popleft(),
-                    "symbol": self.remove_prefix_to_symbol(
-                        settings.REDIS_PREFIX, dep_vars_queue.popleft()
-                    ),
-                }
-            )
+
+            if company_info:
+                results.append(
+                    {
+                        "company": company_info["company"],
+                        "country": company_info["country"],
+                        "marketCap": dep_vars_queue.popleft(),
+                        "rank": dep_vars_queue.popleft(),
+                        "symbol": self.remove_prefix_to_symbol(
+                            settings.REDIS_PREFIX, dep_vars_queue.popleft()
+                        ),
+                    }
+                )
         for future in pending_awaits:
             AppResponse(future)
         return (pending_awaits, json.dumps(results))
