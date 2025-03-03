@@ -1,9 +1,18 @@
 import json
 from mdlin import SyncAppRequest, InitCustom
 from server.core.companies_redis_sync import CompaniesRanks, RedisClient, RankSortKeys
-
+from django.conf import settings
+from redis import Redis, RedisError, ConnectionError
+import os
+import sys
+import django
 
 if __name__ == "__main__":
+    if not settings.configured:
+        settings.configure()
+        sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.configuration.settings")
+        django.setup()
     # Initialize custom configurations or settings
     InitCustom("0", "multi_paxos")
 
