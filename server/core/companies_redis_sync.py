@@ -31,7 +31,6 @@ class RedisClient:
             django.setup()
 
     def set_init_data(self):
-        print("Runnning set init data")
         with open(
             "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
             "r",
@@ -138,8 +137,8 @@ class CompaniesRanks(RedisClient):
             company_info = SyncAppRequest("HGETALL", symbol)
             results.append(
                 {
-                    "company": "fake",
-                    "country": "fake",
+                    "company": company_info["company"],
+                    "country": company_info["country"],
                     "marketCap": market_cap,
                     "rank": start_rank,
                     "symbol": self.remove_prefix_to_symbol(

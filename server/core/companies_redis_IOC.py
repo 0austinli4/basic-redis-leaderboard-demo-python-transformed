@@ -3,6 +3,8 @@ import os
 import json
 import enum
 import logging
+import sys
+import django
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
 from mdlin import AppRequest, AppResponse
@@ -162,6 +164,7 @@ class CompaniesRanks(RedisClient):
             dep_vars_queue.append(start_rank)
             dep_vars_queue.append(symbol)
             start_rank += increase_factor
+
         for company in companies:
             company_info = AppResponse(dep_vars_queue.popleft())
             results.append(
