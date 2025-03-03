@@ -8,7 +8,7 @@ import sys
 import django
 
 
-def set_init_data(self):
+def set_init_data():
     with open(
         "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
         "r",
@@ -16,9 +16,7 @@ def set_init_data(self):
         companies = json.load(init_data)
         try:
             for company in companies:
-                symbol = self.add_prefix_to_symbol(
-                    "redis", company.get("symbol").lower()
-                )
+                symbol = add_prefix_to_symbol("redis", company.get("symbol").lower())
                 SyncAppRequest(
                     "ZADD",
                     "leaderboard",
@@ -30,45 +28,45 @@ def set_init_data(self):
             print("Connection error")
 
 
-def update_company_market_capitalization(self, amount, symbol):
+def update_company_market_capitalization(amount, symbol):
     SyncAppRequest(
         "ZINCRBY",
         "leaderboard",
         amount,
-        self.add_prefix_to_symbol("redis", symbol),
+        add_prefix_to_symbol("redis", symbol),
     )
     return None
 
 
-def get_ranks_by_sort_key(self, key):
+def get_ranks_by_sort_key(key):
     sort_key = RankSortKeys(key)
     if sort_key is RankSortKeys.ALL:
-        return self.get_zrange(0, -1)
+        return get_zrange(0, -1)
     elif sort_key is RankSortKeys.TOP10:
-        return self.get_zrange(0, 9)
+        return get_zrange(0, 9)
     elif sort_key is RankSortKeys.BOTTOM10:
-        return self.get_zrange(0, 9, False)
+        return get_zrange(0, 9, False)
 
 
-def get_ranks_by_symbols(self, symbols):
+def get_ranks_by_symbols(symbols):
     companies_capitalization = []
     for symbol in symbols:
         companies_capitalization.append(
             SyncAppRequest(
                 "ZSCORE",
                 "leaderboard",
-                self.add_prefix_to_symbol("redis", symbol),
+                add_prefix_to_symbol("redis", symbol),
             )
         )
     companies = []
     for index, market_capitalization in enumerate(companies_capitalization):
         companies.append(
             [
-                self.add_prefix_to_symbol("redis", symbols[index]),
+                add_prefix_to_symbol("redis", symbols[index]),
                 market_capitalization,
             ]
         )
-    return self.get_result(companies)
+    return get_result(companies)
 
 
 def get_zrange(self, start_index, stop_index, desc=True):
@@ -83,7 +81,7 @@ def get_zrange(self, start_index, stop_index, desc=True):
         companies = SyncAppRequest("ZREVRANGE", "leaderboard", start_index, stop_index)
     else:
         companies = SyncAppRequest("ZRANGE", "leaderboard", start_index, stop_index)
-    return self.get_result(companies, start_index, desc)
+    return get_result(companies, start_index, desc)
 
 
 def get_result(self, companies, start_index=0, desc=True):
@@ -104,11 +102,19 @@ def get_result(self, companies, start_index=0, desc=True):
                     "country": company_info.get("country", ""),
                     "marketCap": score,  # Using the score from the paired element
                     "rank": start_rank,
-                    "symbol": self.remove_prefix_to_symbol("redis", member),
+                    "symbol": remove_prefix_to_symbol("redis", member),
                 }
             )
         start_rank += increase_factor
     return json.dumps(results)
+
+
+def add_prefix_to_symbol(prefix, symbol):
+    return f"{prefix}:{symbol}"
+
+
+def remove_prefix_to_symbol(prefix, symbol):
+    return symbol.replace(f"{prefix}:", "")
 
 
 if __name__ == "__main__":
