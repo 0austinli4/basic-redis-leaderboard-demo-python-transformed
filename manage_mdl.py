@@ -38,7 +38,8 @@ def main():
     exp_length = args.explen
 
     InitCustom(str(client_id), "mdl")
-    settings.configure()
+    if not settings.configured:
+        settings.configure()
     run_workload(exp_length)
 
 
