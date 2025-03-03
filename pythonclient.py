@@ -49,6 +49,7 @@ def get_ranks_by_sort_key(key):
 
 
 def get_ranks_by_symbols(symbols):
+    print("Getting ranks of following symbols", symbols)
     companies_capitalization = []
     for symbol in symbols:
         companies_capitalization.append(
@@ -66,6 +67,7 @@ def get_ranks_by_symbols(symbols):
                 market_capitalization,
             ]
         )
+
     return get_result(companies)
 
 
@@ -85,6 +87,7 @@ def get_zrange(start_index, stop_index, desc=True):
 
 
 def get_result(companies, start_index=0, desc=True):
+    print("List of companies to input into get result", companies)
     start_rank = int(start_index) + 1 if desc else len(companies) - start_index
     increase_factor = 1 if desc else -1
     results = []
