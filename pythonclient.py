@@ -69,7 +69,7 @@ def get_ranks_by_symbols(symbols):
     return get_result(companies)
 
 
-def get_zrange(self, start_index, stop_index, desc=True):
+def get_zrange(start_index, stop_index, desc=True):
     query_args = {
         "name": "leaderboard",
         "start": start_index,
@@ -84,7 +84,7 @@ def get_zrange(self, start_index, stop_index, desc=True):
     return get_result(companies, start_index, desc)
 
 
-def get_result(self, companies, start_index=0, desc=True):
+def get_result(companies, start_index=0, desc=True):
     start_rank = int(start_index) + 1 if desc else len(companies) - start_index
     increase_factor = 1 if desc else -1
     results = []
