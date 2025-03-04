@@ -61,12 +61,8 @@ def get_ranks_by_symbols(symbols):
         )
     companies = []
     for index, market_capitalization in enumerate(companies_capitalization):
-        companies.append(
-            [
-                add_prefix_to_symbol("redis", symbols[index]),
-                market_capitalization,
-            ]
-        )
+        companies.append(add_prefix_to_symbol("redis", symbols[index]))
+        companies.append(market_capitalization)
 
     return get_result(companies)
 
