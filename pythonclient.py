@@ -10,7 +10,7 @@ import django
 
 def set_init_data():
     with open(
-        "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
+        "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/companies_subset.json",
         "r",
     ) as init_data:
         companies = json.load(init_data)

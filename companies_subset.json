@@ -1,0 +1,86 @@
+[
+  {
+    "company": "Apple",
+    "symbol": "AAPL",
+    "marketCap": 2222000000,
+    "country": "USA"
+  },
+  {
+    "company": "Saudi Aramco",
+    "symbol": "2222.SR",
+    "marketCap": 2046000000,
+    "country": "S. Arabia"
+  },
+  {
+    "company": "Microsoft",
+    "symbol": "MSFT",
+    "marketCap": 1660000000,
+    "country": "USA"
+  },
+  {
+    "company": "Amazon",
+    "symbol": "AMZN",
+    "marketCap": 1597000000,
+    "country": "USA"
+  },
+  {
+    "company": "Alphabet (Google)",
+    "symbol": "GOOG",
+    "marketCap": 1218000000,
+    "country": "USA"
+  },
+  {
+    "company": "Tesla",
+    "symbol": "TSLA",
+    "marketCap": 834170000,
+    "country": "USA"
+  },
+  {
+    "company": "Facebook",
+    "symbol": "FB",
+    "marketCap": 762110000,
+    "country": "USA"
+  },
+  {
+    "company": "Tencent",
+    "symbol": "TCEHY",
+    "marketCap": 742230000,
+    "country": "China"
+  },
+  {
+    "company": "Alibaba",
+    "symbol": "BABA",
+    "marketCap": 642220000,
+    "country": "China"
+  },
+  {
+    "company": "Berkshire Hathaway",
+    "symbol": "BRK-A",
+    "marketCap": 549580000,
+    "country": "USA"
+  },
+  {
+    "company": "Samsung",
+    "symbol": "005930.KS",
+    "marketCap": 526630000,
+    "country": "S. Korea"
+  },
+  {
+    "company": "TSMC",
+    "symbol": "TSM",
+    "marketCap": 511700000,
+    "country": "Taiwan"
+  },
+  {
+    "company": "Visa",
+    "symbol": "V",
+    "marketCap": 474940000,
+    "country": "USA"
+  },
+  {
+    "company": "Johnson &amp; Johnson",
+    "symbol": "JNJ",
+    "marketCap": 421310000,
+    "country": "USA"
+  }
+]
