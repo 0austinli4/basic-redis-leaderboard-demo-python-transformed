@@ -79,6 +79,7 @@ def get_zrange(start_index, stop_index, desc=True):
         companies = SyncAppRequest("ZREVRANGE", "leaderboard", start_index, stop_index)
     else:
         companies = SyncAppRequest("ZRANGE", "leaderboard", start_index, stop_index)
+    # print("Result of get_zrange ", companies)
     return get_result(companies, start_index, desc)
 
 
@@ -93,7 +94,11 @@ def get_result(companies, start_index=0, desc=True):
         # Ensure there's a score following the member
         score = companies[i + 1] if i + 1 < len(companies) else None
 
+        print("Member and score for HGET ALL", member, score)
+
         company_info = SyncAppRequest("HGETALL", member)
+
+        print("Company info for this company", company_info)
         if company_info and isinstance(company_info, dict):
             results.append(
                 {
