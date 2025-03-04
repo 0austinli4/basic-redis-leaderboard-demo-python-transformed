@@ -17,6 +17,7 @@ def set_init_data():
         try:
             for company in companies:
                 symbol = add_prefix_to_symbol("redis", company.get("symbol").lower())
+                print("About to add ", company.get("marketCap"))
                 SyncAppRequest(
                     "ZADD",
                     "leaderboard",
