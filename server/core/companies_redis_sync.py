@@ -44,7 +44,8 @@ class RedisClient:
                     SyncAppRequest(
                         "ZADD",
                         settings.REDIS_LEADERBOARD,
-                        {symbol: company.get("marketCap")},
+                        symbol,
+                        company.get("marketCap"),
                     )
                     SyncAppRequest("HSET", symbol, "company", company.get("company"))
                     SyncAppRequest("HSET", symbol, "country", company.get("country"))
@@ -99,7 +100,7 @@ class CompaniesRanks(RedisClient):
             )
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
-            companies.append(
+            companies.extend(
                 [
                     self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
                     market_capitalization,
@@ -129,7 +130,7 @@ class CompaniesRanks(RedisClient):
         start_rank = int(start_index) + 1 if desc else len(companies) - start_index
         increase_factor = 1 if desc else -1
         results = []
-        
+
         for i in range(0, len(companies), 2):
             member = companies[i]
             # Ensure there's a score following the member
