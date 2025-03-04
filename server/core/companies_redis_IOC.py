@@ -147,7 +147,7 @@ class CompaniesRanks(RedisClient):
             pending_awaits.append(future_1)
         companies = AppResponse(pending_awaits.pop())
         res = self.get_result(companies, start_index, desc)
-        return (pending_awaits, res)
+        return res
 
     def get_result(self, companies, start_index=0, desc=True):
         dep_vars_queue = deque()
