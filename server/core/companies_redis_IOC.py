@@ -172,18 +172,20 @@ class CompaniesRanks(RedisClient):
         for i in range(0, len(companies), 2):
             company_info = AppResponse(dep_vars_queue.popleft())
 
-            if company_info and isinstance(company_info, dict):
-                results.append(
-                    {
-                        "company": company_info["company"],
-                        "country": company_info["country"],
-                        "marketCap": dep_vars_queue.popleft(),
-                        "rank": dep_vars_queue.popleft(),
-                        "symbol": self.remove_prefix_to_symbol(
-                            settings.REDIS_PREFIX, dep_vars_queue.popleft()
-                        ),
-                    }
-                )
+            if not company_info or not isinstance(company_info, dict):
+                company_info = {"company": "temp", "country": "temp"}
+
+            results.append(
+                {
+                    "company": company_info["company"],
+                    "country": company_info["country"],
+                    "marketCap": dep_vars_queue.popleft(),
+                    "rank": dep_vars_queue.popleft(),
+                    "symbol": self.remove_prefix_to_symbol(
+                        settings.REDIS_PREFIX, dep_vars_queue.popleft()
+                    ),
+                }
+            )
         for future in pending_awaits:
             AppResponse(future)
         return json.dumps(results)
