@@ -67,7 +67,7 @@ class RedisClient:
                 logger.error(error_message)
         for future in pending_awaits:
             AppResponse(future)
-        return (pending_awaits, None)
+        return None
 
     @staticmethod
     def add_prefix_to_symbol(prefix, symbol):
