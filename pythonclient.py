@@ -22,7 +22,7 @@ def set_init_data():
                     "ZADD",
                     "leaderboard",
                     symbol,
-                    company.get("marketCap"),
+                    str(company.get("marketCap")),
                 )
                 SyncAppRequest("HSET", symbol, "company", company.get("company"))
                 SyncAppRequest("HSET", symbol, "country", company.get("country"))
