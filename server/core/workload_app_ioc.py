@@ -32,7 +32,7 @@ def run_workload(exp_length):
         if app_request_type <= 10:
             selector = 0
             amount = random.uniform(1e6, 1e9)
-            symbol = random.choice(["AAPL", "GOOG", "AMZN", "MSFT"])
+            symbol = random.choice(["aapl", "goog", "amzn", "msft"])
             company.update_company_market_capitalization(amount, symbol)
         elif app_request_type <= 40:
             selector = 1
@@ -40,7 +40,7 @@ def run_workload(exp_length):
             company.get_ranks_by_sort_key(sort_key)
         elif app_request_type <= 70:
             selector = 2
-            symbols = random.sample(["AAPL", "GOOG", "AMZN", "MSFT", "TSLA"], 2)
+            symbols = random.sample(["aapl", "goog", "amzn", "msft", "tsla"], 2)
             company.get_ranks_by_symbols(symbols)
         else:
             selector = 3

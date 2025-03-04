@@ -65,6 +65,8 @@ class RedisClient:
                 else:
                     error_message = f"Redis connection time out to {settings.REDIS_HOST}:{settings.REDIS_PORT}."
                 logger.error(error_message)
+        for future in pending_awaits:
+            AppResponse(future)
         return (pending_awaits, None)
 
     @staticmethod
@@ -88,7 +90,7 @@ class CompaniesRanks(RedisClient):
         pending_awaits.add(future_0)
         for future in pending_awaits:
             AppResponse(future)
-        return (pending_awaits, None)
+        return None
 
     def get_ranks_by_sort_key(self, key):
         sort_key = RankSortKeys(key)
@@ -124,7 +126,7 @@ class CompaniesRanks(RedisClient):
             )
         for future in pending_awaits:
             AppResponse(future)
-        return (pending_awaits, self.get_result(companies))
+        return self.get_result(companies)
 
     def get_zrange(self, start_index, stop_index, desc=True):
         pending_awaits = []
@@ -184,4 +186,4 @@ class CompaniesRanks(RedisClient):
                 )
         for future in pending_awaits:
             AppResponse(future)
-        return (pending_awaits, json.dumps(results))
+        return json.dumps(results)
