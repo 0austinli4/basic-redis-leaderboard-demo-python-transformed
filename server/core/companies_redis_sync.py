@@ -132,20 +132,20 @@ class CompaniesRanks(RedisClient):
         results = []
 
         for i in range(0, len(companies), 2):
-            member = companies[i]
+            symbol = companies[i]
             # Ensure there's a score following the member
-            score = companies[i + 1] if i + 1 < len(companies) else None
+            market_cap = companies[i + 1] if i + 1 < len(companies) else None
 
-            company_info = SyncAppRequest("HGETALL", member)
+            company_info = SyncAppRequest("HGETALL", symbol)
             if company_info and isinstance(company_info, dict):
                 results.append(
                     {
                         "company": company_info.get("company", ""),
                         "country": company_info.get("country", ""),
-                        "marketCap": score,  # Using the score from the paired element
+                        "marketCap": market_cap,
                         "rank": start_rank,
                         "symbol": self.remove_prefix_to_symbol(
-                            settings.REDIS_PREFIX, member
+                            settings.REDIS_PREFIX, symbol
                         ),
                     }
                 )

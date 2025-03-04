@@ -45,7 +45,8 @@ class RedisClient:
                     future_0 = AppRequest(
                         "ZADD",
                         settings.REDIS_LEADERBOARD,
-                        {symbol: company.get("marketCap")},
+                        symbol,
+                        str(company.get("marketCap")),
                     )
                     pending_awaits.add(future_0)
                     future_1 = AppRequest(
@@ -115,8 +116,11 @@ class CompaniesRanks(RedisClient):
             companies_capitalization.append(zscore)
         companies = []
         for index, market_capitalization in enumerate(companies_capitalization):
-            companies.append(
-                self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
+            companies.extend(
+                [
+                    self.add_prefix_to_symbol(settings.REDIS_PREFIX, symbols[index]),
+                    market_capitalization,
+                ]
             )
         for future in pending_awaits:
             AppResponse(future)
@@ -152,16 +156,18 @@ class CompaniesRanks(RedisClient):
         increase_factor = 1 if desc else -1
         results = []
 
-        for company in companies:
-            symbol = company
+        for i in range(0, len(companies), 2):
+            symbol = companies[i]
+            market_cap = companies[i + 1] if i + 1 < len(companies) else None
+
             future_0 = AppRequest("HGETALL", symbol)
             dep_vars_queue.append(future_0)
-            dep_vars_queue.append(1000)
+            dep_vars_queue.append(market_cap)
             dep_vars_queue.append(start_rank)
             dep_vars_queue.append(symbol)
             start_rank += increase_factor
 
-        for company in companies:
+        for i in range(0, len(companies), 2):
             company_info = AppResponse(dep_vars_queue.popleft())
 
             if company_info and isinstance(company_info, dict):
