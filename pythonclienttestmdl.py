@@ -1,7 +1,7 @@
 from collections import deque
 import json
 from mdlin import AppRequest, AppResponse, InitCustom
-from server.core.companies_redis_sync import CompaniesRanks, RedisClient, RankSortKeys
+from server.core.companies_redis_IOC import RankSortKeys
 from django.conf import settings
 from redis import Redis, RedisError, ConnectionError
 import os
@@ -12,10 +12,11 @@ import django
 def set_init_data():
     pending_awaits = {*()}
     with open(
-        "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/server/core/companies_data.json",
+        "/users/akalaba/basic-redis-leaderboard-demo-python-transformed/companies_subset.json",
         "r",
     ) as init_data:
         companies = json.load(init_data)
+        all_symbols = []
         try:
             for company in companies:
                 symbol = add_prefix_to_symbol("redis", company.get("symbol").lower())
@@ -30,6 +31,7 @@ def set_init_data():
                 pending_awaits.add(future_1)
                 future_2 = AppRequest("HSET", symbol, "country", company.get("country"))
                 pending_awaits.add(future_2)
+                all_symbols.append(symbol)
         except ConnectionError:
             print("Error")
         for future in pending_awaits:
