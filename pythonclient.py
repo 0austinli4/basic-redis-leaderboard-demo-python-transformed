@@ -51,7 +51,6 @@ def get_ranks_by_sort_key(key):
 
 
 def get_ranks_by_symbols(symbols):
-    print("Getting ranks of following symbols", symbols)
     companies_capitalization = []
     for symbol in symbols:
         companies_capitalization.append(

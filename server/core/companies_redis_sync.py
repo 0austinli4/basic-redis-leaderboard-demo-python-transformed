@@ -45,7 +45,7 @@ class RedisClient:
                         "ZADD",
                         settings.REDIS_LEADERBOARD,
                         symbol,
-                        company.get("marketCap"),
+                        str(company.get("marketCap")),
                     )
                     SyncAppRequest("HSET", symbol, "company", company.get("company"))
                     SyncAppRequest("HSET", symbol, "country", company.get("country"))
