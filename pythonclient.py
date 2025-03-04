@@ -147,5 +147,5 @@ if __name__ == "__main__":
     print("Top Ranks:", top_ranks)
 
     # Test getting ranks by specific symbols
-    ranks = get_ranks_by_symbols(["AAPL", "GOOG"])
+    ranks = get_ranks_by_symbols(["aapl", "goog"])
     print("Ranks by Symbols:", ranks)
