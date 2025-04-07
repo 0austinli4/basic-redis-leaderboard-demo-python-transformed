@@ -62,9 +62,12 @@ def get_ranks_by_symbols(symbols):
         )
     companies = []
     for index, market_capitalization in enumerate(companies_capitalization):
-        companies.append(add_prefix_to_symbol("redis", symbols[index]))
-        companies.append(market_capitalization)
-
+        companies.extend(
+            [
+                add_prefix_to_symbol("redis", symbols[index]),
+                market_capitalization,
+            ]
+        )
     return get_result(companies)
 
 
@@ -136,9 +139,9 @@ if __name__ == "__main__":
     # print("Updating market capitalization for 'AAPL'...")
     print("Updating market capitalization for multiple companies...")
     updates = {
-        "AMZN": 1600000000,
-        "MSFT": 1700000000,
-        "TSLA": 850000000,
+        "amzn": 1600000000,
+        "msft": 1700000000,
+        "tsla": 850000000,
     }
     for symbol, new_cap in updates.items():
         update_company_market_capitalization(new_cap, symbol)
